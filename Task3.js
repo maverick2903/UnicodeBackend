@@ -1,4 +1,3 @@
-import fetch from "node-fetch";
 import { MongoClient } from "mongodb";
 import express from "express";
 const url = "mongodb://localhost:27017";
@@ -9,16 +8,18 @@ async function dbConnect() {
   let db = result.db(database);
   return db.collection("posts");
 }
+
 const app = express();
+app.use(express.json());
 app.get("/", async (req, resp) => {
   let data = await dbConnect();
   data = await data.find().toArray();
   resp.send(data);
 });
-
-app.get("/bettercallsaul", async (req, resp) => {
-  let bdata = await dbConnect();
-  bdata = await bdata.find({ category: "Better Call Saul" }).toArray();
-  resp.send(bdata);
+app.post("/", async (req, resp) => {
+  let data = await dbConnect();
+  let result = await data.insertOne(req.body);
+  resp.send(result);
 });
-app.listen(3000);
+
+app.listen(4000);
