@@ -29,3 +29,5 @@ app.get("/", async (req, resp) => {
   data = await data.find().toArray();
   resp.send(data);
 });
+
+app.listen(6000);
